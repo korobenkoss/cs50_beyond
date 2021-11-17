@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+        <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+        <title>Flashcards</title>
+        <style>
+           table, tr, td {
+               border: 1px solid black;
+               border-collapse: collapse;
+           }
+           td {
+               width: 80px;
+               height: 80px;
+               background-color: lightgray;
+           }
+           td:hover {
+               background-color: grey;
+           }
+           table {
+               margin: 20px auto;
+               color: rgb(255, 133, 225);
+           }
+        </style>
+    </head>
+    <body>
+        <div id="app"></div>
+        <script type="text/babel">
+
+            class App extends React.Component {
+
+                constructor(props) {
+                    super(props);
+                    this.state = {
+                        gameBoard: [
+                            ["white", "white", "white", "white", "white", "white", "white"],
+                            ["white", "white", "white", "white", "white", "white", "white"],
+                            ["white", "white", "white", "white", "white", "white", "white"],
+                            ["white", "white", "white", "white", "white", "white", "white"],
+                            ["white", "white", "white", "white", "white", "white", "white"],
+                            ["white", "white", "white", "white", "white", "white", "white"],
+                            ["white", "white", "white", "white", "white", "white", "white"]
+                        ],
+
+                        red: true
+                    };
+                }
+
+                render() {
+                    const rows = this.state.gameBoard.map((row, i) => {
+                        const cells = row.map((cell, j) => {
+                            const color = this.state.gameBoard[i][j];
+                            return (
+                                <td key={j} data-column={j} data-row={i} onClick={this.makeMove}>
+                                    <svg width='80px' height='80px' data-column={j} data-row={i}>
+                                        <circle cx='40px' cy='40px' r='30px' fill={color} data-column={j} data-row={i} />    
+                                    </svg>
+                                </td>
+                            )
+                        })
+
+                        return <tr key={i} data-row={i}>{cells}</tr>
+                    })
+
+                    return <table>{rows}</table>
+                }
+
+                makeMove = (event) => {
+                    let column = event.target.dataset.column;
+                    let row = event.target.dataset.row;
+                    let turn = this.state.red ? 'red' : 'black';
+                    
+                    this.setState(state => {
+                        let newGameBoard = state.gameBoard;
+                        let lastRow = newGameBoard.length - 1;
+                        while(newGameBoard[lastRow][column] !== 'white'){
+                            if(lastRow === 0) break;
+                            lastRow--;
+                        }
+                        newGameBoard[lastRow][column] = turn;
+                        console.table(newGameBoard);
+                        return ({
+                            gameBoard: newGameBoard,
+                            red: !state.red
+                        })
+                    })
+                    this.checkWin();
+                }
+
+                checkWin = () => {
+                    console.log("Checking for winner");
+                }
+            }
+            ReactDOM.render(<App />, document.querySelector("#app"));
+
+        </script>
+    </body>
+</html>

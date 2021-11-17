@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Books
+{% endblock %}
+
+{% block body %}
+    <h1>All Books</h1>
+
+    <ul>
+        {% for book in books %}
+            <li>
+                <a href="{{ url_for('book', book_id=book.id) }}">
+                    {{ book.title }} by {{ book.written_by.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    
+    
+    <h1>All Authors</h1>
+
+    <ul>
+        {% for author in authors %}
+            <li>
+                <a href="{{ url_for('author', author_id=author.id) }}">
+                    {{ author.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}
